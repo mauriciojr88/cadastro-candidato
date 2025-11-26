@@ -125,4 +125,4 @@ No canto superior direito do GitHub, clique em **Fork**.
 
 ## **2. Clone o Seu Fork**
 ```bash
-git clone https://github.com/SEU_USUARIO/NOME_DO_REPO.git
+git clone https://github.com/ti-lutocuritiba/Teste-tecnico.git
