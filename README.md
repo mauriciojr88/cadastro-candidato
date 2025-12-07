@@ -1,132 +1,113 @@
-# 📝 Desafio Técnico – Cadastro de Candidato com Análise de CV
+# 📌 Cadastro de Candidatos com Análise Automática de Currículo
 
-Bem-vindo ao desafio técnico!  
-Este repositório contém as instruções para desenvolver uma aplicação completa, incluindo autenticação, upload de currículo, análise de PDF, integração com API externa, filtros, paginação e manipulação de grande volume de dados.
+Aplicação **Fullstack** para cadastro e gestão de candidatos com:
 
----
+✔ Autenticação segura  
+✔ Upload de currículo em PDF  
+✔ Extração automática de Nome, E-mail e Telefone do currículo  
+✔ Consulta automática de endereço via ViaCEP  
+✔ Armazenamento completo das informações no PostgreSQL  
+✔ Listagem com busca textual, filtros e paginação  
 
-# 📌 Sumário
-- [Objetivo do Desafio](#-objetivo-do-desafio)
-- [Funcionalidades Obrigatórias](#-funcionalidades-obrigatórias)
-- [Diferenciais por Etapa](#-diferenciais-por-etapa)
-- [Critérios de Avaliação](#-critérios-de-avaliação)
-- [Tecnologias Permitidas](#-tecnologias-permitidas)
-- [Como Participar (Fork, Clone, Branch, PR)](#-como-participar)
-- [Como Rodar o Projeto](#-como-rodar-o-projeto)
-- [Entrega Final](#-entrega-final)
-- [Nível do Candidato](#-nível-do-candidato)
+Projeto desenvolvido como solução para **Desafio Técnico – Fullstack (Node.js + React)**.
 
----
-
-# 🎯 Objetivo do Desafio
-
-Construir uma aplicação web onde o usuário possa:
-
-- Criar conta e fazer login  
-- Enviar um currículo em PDF  
-- Informar um CEP  
-- Ter o endereço preenchido automaticamente pela API **ViaCEP**  
-- Ter **nome, e-mail e telefone extraídos automaticamente** do PDF  
-- Gravar todos os dados no banco de dados, incluindo texto completo do PDF  
-- Permitir listagem de candidatos com:  
-  - Paginação  
-  - Filtros  
-  - Busca por conteúdo do currículo  
-
-Este desafio simula um ambiente real de grande volume de dados e integrações múltiplas.
-
----
-
-# 🧩 Funcionalidades Obrigatórias
-
-## 🔐 Autenticação
-- Cadastro de usuário  
-- Login com autenticação segura  
-- Proteção das rotas privadas  
-
-## 📄 Upload de PDF
-- Aceitar apenas PDF  
-- Extrair do PDF:
-  - Nome
-  - E-mail
-  - Telefone
-- Armazenar conteúdo completo do currículo para pesquisa
-
-## 📍 Consulta ViaCEP
-- Buscar endereço a partir do CEP informado  
-- Preencher logradouro, bairro, cidade e UF automaticamente  
-
-## 🗄️ Banco de Dados
-Salvar:
-- Dados pessoais  
-- Endereço retornado pelo ViaCEP  
-- Metadados do arquivo  
-- Conteúdo completo do PDF  
-
-## 🔎 Listagem de Candidatos
-- Paginação  
-- Filtros combinados  
-- Busca textual no CV  
-
-# ⭐ Diferenciais por Etapa
-
-## 🔐 Autenticação
-- JWT com refresh token  
-- bcrypt para senhas  
+## 🏗️ Arquitetura da Aplicação:
+| Camada | Tecnologia |
+|--------|------------|
+| Frontend | React, React Router, React Query, Axios |
+| Backend | Node.js, Express.js, JWT, Bcrypt, Multer, pdf-parse |
+| Banco | PostgreSQL |
+| API Externa | ViaCEP (consulta de endereço) |
 
 
-## 📄 PDF
-- Regex robusto  
-- Normalização de texto  
-- Pipeline separado (upload → extração → sanitização → armazenamento)  
-- Tratamento para PDFs escaneados  
+## 🔐 Autenticação:
+- Registro de usuário
+- Login utilizando JWT (Access Token + Refresh Token)
+- Rotas protegidas no frontend
 
 
-## 🖥️ Frontend
-- Hooks bem utilizados  
-- React Query (cache)  
-- Componentização  
-- Máscara de CEP e telefone  
-- Feedback visual (loading, erro, vazio)  
+## 📄 Upload & Análise do Currículo PDF:
+Utilizando **pdf-parse** + **Regex**, são extraídas automaticamente do currículo:
+- Nome
+- E-mail
+- Telefone
 
-# 🧪 Critérios de Avaliação
+Além disso, o **conteúdo completo** do PDF é salvo para permitir:
 
-### ✔ Funcionais
-- A aplicação funciona de ponta a ponta?
-
-### ✔ Técnicos
-- Código bem estruturado?  
-- Separação de responsabilidades?  
-
-### ✔ Boas práticas
-- Tratamento de erros  
-- Clean code  
-- Validações  
+✔ Busca de palavras-chave dentro do CV
 
 
-# 🛠️ Tecnologias Permitidas
+## 📍 Integração via CEP – API ViaCEP:
+Ao digitar o CEP, o sistema:
 
-### Backend
-- Node.js 
-
-### Frontend
-- React 
-
-### Banco de Dados
-- PostgreSQL (recomendado)
+1. Consulta automaticamente a API ViaCEP
+2. Preenche os campos de endereço
+3. Mantém edição manual habilitada
 
 
----
+## 🗄️ Banco de Dados – Estrutura:
+Tabela `users` – Login e controle de acesso  
+Tabela `candidates` – Dados completos do candidato
 
-# 🚀 Como Participar
+| Campo | Descrição |
+|------|-----------|
+| user_id | Relacionamento com usuário logado |
+| name, email, phone | Extraídos do PDF |
+| cep, logradouro, bairro, cidade, uf | Preenchidos via ViaCEP |
+| cv_filename, cv_mimetype, cv_size | Metadados do currículo enviado |
+| cv_text | Texto completo para pesquisa |
+| is_scanned | Identificação de PDF escaneado |
+| created_at | Registro da data de envio |
 
-## **1. Faça um Fork do Repositório**
-No canto superior direito do GitHub, clique em **Fork**.
 
-## **2. Clone o Seu Fork**
-```bash
-git clone https://github.com/ti-lutocuritiba/Teste-tecnico.git
+## 🔎 Listagem de Candidatos:
+- Filtros combinados
+  - Nome / E-mail / Conteúdo do CV
+  - Cidade
+  - UF
+- Paginação real (backend)
+- Pesquisa com **debounce** → Melhor performance
 
-## **3. Commit seu codigo com redme explicação os conceitos
 
-## **4. Suba sua api e front end em algum abiente vercel render etc  adicione os links de acesso no repo 
+## ▶️ Como Rodar o Projeto:
+### 1️⃣ Banco de Dados:
+
+Criar banco:
+
+```sql
+CREATE DATABASE candidatos_db;
+
+Criar tabelas:
+
+cd backend
+```sql
+psql -U postgres -d candidatos_db -f src/sql/schema.sql
+```sql
+
+BACKEND:
+cd backend
+cp .env.example .env
+npm install
+npm run dev
+
+
+Backend estará em:
+➡ http://localhost:4000
+
+FRONTEND:
+cd frontend
+npm install
+npm run dev
+
+
+Frontend estará em:
+➡ http://localhost:5173/
+
+🧪 Fluxo de Uso:
+1️⃣ Criar usuário na tela de Registro
+2️⃣ Fazer login
+3️⃣ Acessar Novo Candidato
+4️⃣ Digitar um CEP válido
+5️⃣ Selecionar um PDF de currículo
+6️⃣ Enviar
+7️⃣ Visualizar candidato na listagem com filtros e paginação

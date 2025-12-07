@@ -1,0 +1,143 @@
+body {
+  background: #1a1a1a;
+  font-family: Arial, sans-serif;
+  color: #eee;
+  margin: 0;
+  padding: 0;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  height: 50vh;
+}
+  
+  a {
+    color: #61dafb;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  
+  a:hover {
+    text-decoration: underline;
+  }
+  
+  main, .page-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 32px;
+    font-weight: bold;
+    margin-bottom: 24px;
+  }
+  
+  form {
+    display: grid;
+    gap: 12px;
+    max-width: 500px;
+  }
+  
+  label {
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+  
+  input[type="text"],
+  input[type="password"],
+  input[type="email"],
+  input {
+    width: 100%;
+    padding: 10px;
+    background: #2b2b2b;
+    color: #eee;
+    border: 1px solid #444;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+  
+  input:focus {
+    outline: none;
+    border-color: #61dafb;
+  }
+  
+  button {
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    background: #61dafb;
+    color: #1a1a1a;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    opacity: 0.85;
+  }
+  
+  button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  
+  p {
+    font-size: 14px;
+    margin: 6px 0;
+  }
+  
+  p.error {
+    color: #ff6b6b;
+  }
+  
+  p.success {
+    color: #51cf66;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #222;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  th {
+    background: #333;
+    padding: 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+  }
+  
+  td {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  tr:nth-child(even) {
+    background: #282828;
+  }
+  
+  tr:hover {
+    background: #353535;
+  }
+  
+  header nav {
+    background: #111;
+    padding: 10px;
+    border-radius: 5px;
+    border-bottom: 1px solid #444;
+  }
+  
+  header nav a,
+  header nav button {
+    background: none;
+    color: #61dafb;
+    padding: 6px 10px;
+    font-size: 14px;
+  }
+  
+  header nav button:hover {
+    color: #ff6b6b;
+  }
+  
