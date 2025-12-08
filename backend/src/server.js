@@ -8,9 +8,17 @@ const addressRoutes = require('./routes/addressRoutes');
 const app = express();
 const healthRoutes = require('./routes/healthRoutes');
 
-app.use('/api/health', healthRoutes);
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://*.vercel.app"
+];
 
-app.use(cors());
+app.use(cors({
+  origin: allowedOrigins,
+  credentials: true
+}));
+
+app.use('/api/health', healthRoutes);
 app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/candidates', candidateRoutes);
