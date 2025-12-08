@@ -1,113 +1,120 @@
 # 📌 Cadastro de Candidatos com Análise Automática de Currículo
 
-Aplicação **Fullstack** para cadastro e gestão de candidatos com:
+Aplicação Fullstack completa para cadastro e gestão de candidatos com **análise automática de currículo PDF**.
 
-✔ Autenticação segura  
-✔ Upload de currículo em PDF  
-✔ Extração automática de Nome, E-mail e Telefone do currículo  
-✔ Consulta automática de endereço via ViaCEP  
-✔ Armazenamento completo das informações no PostgreSQL  
-✔ Listagem com busca textual, filtros e paginação  
+### ✔ Funcionalidades Principais
+- Autenticação segura com JWT
+- Upload e processamento de PDF
+- Extração automática de Nome, E-mail e Telefone
+- Consulta automática de endereço via ViaCEP
+- Armazenamento completo no PostgreSQL
+- Busca textual inteligente dentro do CV
+- Filtros + Paginação no backend
+- Interface responsiva e protegida
 
-Projeto desenvolvido como solução para **Desafio Técnico – Fullstack (Node.js + React)**.
-
-## 🏗️ Arquitetura da Aplicação:
-| Camada | Tecnologia |
-|--------|------------|
-| Frontend | React, React Router, React Query, Axios |
-| Backend | Node.js, Express.js, JWT, Bcrypt, Multer, pdf-parse |
-| Banco | PostgreSQL |
-| API Externa | ViaCEP (consulta de endereço) |
+Desenvolvido como solução para **Desafio Técnico – Fullstack (Node.js + React)**.
 
 
-## 🔐 Autenticação:
+### 🚀 Deploy em Produção
+- **Frontend (Vercel):** [https://cadastro-candidato.vercel.app]
+- **Backend (Render):** [https://cadastro-candidato-api.onrender.com]
+- **Health Check:** [https://cadastro-candidato-api.onrender.com/api/health]
+
+### 🏗️ Arquitetura da Aplicação
+
+| Camada              | Tecnologias                                         |
+|---------------------|-----------------------------------------------------|
+| Frontend            | React, React Router, React Query, Axios             |
+| Backend             | Node.js, Express.js, JWT, bcrypt, multer, pdf-parse |
+| Banco de Dados      | PostgreSQL (NeonDB)                                 |
+| Integração Externa  | ViaCEP API                                          |
+
+
+### 🔐 Autenticação
 - Registro de usuário
-- Login utilizando JWT (Access Token + Refresh Token)
-- Rotas protegidas no frontend
+- Login com JWT + Refresh Token
+- Proteção de rotas no frontend
+- Persistência automática da sessão no navegador
 
 
-## 📄 Upload & Análise do Currículo PDF:
-Utilizando **pdf-parse** + **Regex**, são extraídas automaticamente do currículo:
-- Nome
-- E-mail
-- Telefone
+### 📄 Upload & Processamento do Currículo PDF
 
-Além disso, o **conteúdo completo** do PDF é salvo para permitir:
+Após o upload do PDF:
+1. O servidor valida o tipo do arquivo
+2. O conteúdo é extraído usando `pdf-parse`
+3. Regex detecta automaticamente:
+   - Nome
+   - Email
+   - Telefone
+4. O conteúdo completo do CV é salvo para busca posterior
 
-✔ Busca de palavras-chave dentro do CV
-
-
-## 📍 Integração via CEP – API ViaCEP:
-Ao digitar o CEP, o sistema:
-
-1. Consulta automaticamente a API ViaCEP
-2. Preenche os campos de endereço
-3. Mantém edição manual habilitada
+> 📌 PDFs escaneados são detectados através do campo `is_scanned`.
 
 
-## 🗄️ Banco de Dados – Estrutura:
-Tabela `users` – Login e controle de acesso  
-Tabela `candidates` – Dados completos do candidato
-
-| Campo | Descrição |
-|------|-----------|
-| user_id | Relacionamento com usuário logado |
-| name, email, phone | Extraídos do PDF |
-| cep, logradouro, bairro, cidade, uf | Preenchidos via ViaCEP |
-| cv_filename, cv_mimetype, cv_size | Metadados do currículo enviado |
-| cv_text | Texto completo para pesquisa |
-| is_scanned | Identificação de PDF escaneado |
-| created_at | Registro da data de envio |
-
-
-## 🔎 Listagem de Candidatos:
-- Filtros combinados
-  - Nome / E-mail / Conteúdo do CV
+### 🏡 Consulta de Endereço por CEP
+- API ViaCEP chamada ao perder foco do campo (`onBlur`)
+- Preenchimento automático de:
+  - Logradouro
+  - Bairro
   - Cidade
   - UF
-- Paginação real (backend)
-- Pesquisa com **debounce** → Melhor performance
+- Usuário pode ajustar manualmente se necessário
+
+### 🗄️ Modelo do Banco de Dados
+
+#### Tabela `users`
+- Autenticação e controle de acesso
+
+#### Tabela `candidates`
+
+| Campo                                         | Descrição                               |
+|-----------------------------------------------|-----------------------------------------|
+| `user_id`                                     | Usuário que cadastrou                   |
+| `name`, `email`, `phone`                      | Extraídos do CV                         |
+| `cep`, `logradouro`, `bairro`, `cidade`, `uf` | Obtidos via ViaCEP                      |
+| `cv_filename`, `cv_mimetype`, `cv_size`       | Metadados do PDF                        |
+| `cv_text`                                     | Conteúdo completo do currículo          |
+| `is_scanned`                                  | Se o arquivo não possui texto (imagem)  |
+| `created_at`                                  | Data de cadastro                        |
 
 
-## ▶️ Como Rodar o Projeto:
-### 1️⃣ Banco de Dados:
+### 🔎 Listagem de Candidatos
+Backend com paginação e filtros eficientes:
+- Busca por texto no currículo (`LIKE cv_text`)
+- Filtro por cidade e UF
+- Debounce na barra de pesquisa → evita requisições excessivas
+- Tabela com ordenação cronológica
 
-Criar banco:
 
+#### 1️⃣ Banco de Dados
 ```sql
 CREATE DATABASE candidatos_db;
 
-Criar tabelas:
-
 cd backend
-```sql
 psql -U postgres -d candidatos_db -f src/sql/schema.sql
-```sql
 
-BACKEND:
+# BACKEND:
+-----------
 cd backend
 cp .env.example .env
 npm install
 npm run dev
 
 
-Backend estará em:
-➡ http://localhost:4000
-
-FRONTEND:
-cd frontend
+# FRONTEND: 
+------------
+cd backend
+cp .env.example .env
 npm install
 npm run dev
 
 
-Frontend estará em:
-➡ http://localhost:5173/
-
-🧪 Fluxo de Uso:
-1️⃣ Criar usuário na tela de Registro
-2️⃣ Fazer login
-3️⃣ Acessar Novo Candidato
-4️⃣ Digitar um CEP válido
-5️⃣ Selecionar um PDF de currículo
-6️⃣ Enviar
-7️⃣ Visualizar candidato na listagem com filtros e paginação
+🧪 Fluxo de Teste:
+-------------------
+- Criar conta na tela de Registro
+- Fazer login
+- Acessar "Novo Candidato"
+- Preencher um CEP válido
+- Selecionar um PDF real de currículo
+- Enviar
+- Acessar a lista com filtros, paginação e busca textual
